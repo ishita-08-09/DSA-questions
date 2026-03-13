@@ -1,0 +1,67 @@
+// class Solution {
+//     public int deleteAndEarn(int[] nums) {
+//         int max=Integer.MIN_VALUE;
+//         int n=nums.length;
+
+
+//         for(int i=0;i<nums.length;i++){
+//             if(nums[i]>max){
+//               max=nums[i];
+//          }
+//         }
+
+//         int[] freq=new int[max+1];
+//         for(int i=0;i<nums.length;i++){
+//             int index=nums[i];
+//             freq[index]+=nums[i];
+//         }
+//         if(n==1) return nums[0];
+//         int[] dp=new int[freq.length+1];
+//         Arrays.fill(dp,-1);
+//         if(n==1) return freq[0];
+//         int ans=helper(freq.length,freq,dp);
+//         return ans;
+
+
+//     }
+//     int helper(int n,int[] freq,int[] dp){
+//         if(n==1) return freq[0];
+//         if(n==2) return Math.max(freq[0],freq[1]);
+//         if(dp[n]!=-1) return dp[n];
+//         return dp[n]=Math.max(freq[n-1]+helper(n-2,freq,dp),helper(n-1,freq,dp));
+//     }
+// }
+class Solution{
+      public int deleteAndEarn(int[] nums){
+        int max=Integer.MIN_VALUE;
+
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]>max){
+                max=nums[i];
+            }
+        }
+        int[] freq=new int[max+1];
+        for(int i=0;i<nums.length;i++){
+            int index=nums[i];
+            freq[index]+=nums[i];
+        }
+        int n1=freq.length;
+        if(n1==1) return freq[0];
+        if(n1==2) return Math.max(freq[0],freq[1]);
+         int[] dp=new int[freq.length+1];
+        Arrays.fill(dp,-1);
+
+        int ans=helper(dp,freq);
+        return ans;
+      }
+      int helper(int[] dp,int[] freq){
+        dp[1]=freq[0];
+        dp[2]=Math.max(freq[0],freq[1]);
+        int n=freq.length;
+        for(int i=3;i<=n;i++){
+            dp[i]=Math.max(dp[i-1],freq[i-1]+dp[i-2]);
+        }
+        return dp[n];
+      }
+
+}
