@@ -1,0 +1,64 @@
+class Solution {
+    public boolean equationsPossible(String[] equations) {
+        HashMap<Character,Integer> h=new HashMap<>();
+         int[] parent=new int[26];
+         int[] size=new int[26];
+         for(int i=0;i<26;i++){
+            parent[i]=i;
+            size[i]=1;
+
+         }
+         int p=0;
+         for(char i='a';i<='z';i++){
+            h.put(i,p);
+            p=p+1;
+         }
+
+         for(int i=0;i<equations.length;i++){
+            String str=equations[i];
+            char ch1=str.charAt(0);
+            char ch2=str.charAt(3);
+            int index1=h.get(ch1);
+            int index2=h.get(ch2);
+            if(str.charAt(1)== '=' && str.charAt(2)== '='){
+                if(find_parent(index1,parent)!=find_parent(index2,parent)){
+                   merge(index1,index2,size,parent);
+                }
+            }
+
+         }
+         for(int i=0;i<equations.length;i++){
+            String str=equations[i];
+            char ch1=str.charAt(0);
+            char ch2=str.charAt(3);
+            int index1=h.get(ch1);
+            int index2=h.get(ch2);
+            if(str.charAt(1)== '!' && str.charAt(2)== '='){
+                if(find_parent(index1,parent)==find_parent(index2,parent)){
+                    return false;
+                }
+            }
+         }
+
+         return true;
+
+    }
+    void merge(int x,int y,int[] size,int[] parent){
+        int px=find_parent(x,parent);
+        int py=find_parent(y,parent);
+        if(size[px]>size[py]){
+            size[px]=size[px]+size[py];
+            parent[py]=px;
+        }
+        else{
+            size[py]=size[py]+size[px];
+            parent[px]=py;
+        }
+    }
+    int find_parent(int curr,int[] parent){
+        if(parent[curr]==curr){
+            return curr;
+        }
+        return parent[curr]=find_parent(parent[curr],parent);
+    }
+}

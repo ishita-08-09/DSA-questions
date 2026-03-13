@@ -1,0 +1,44 @@
+
+class Solution {
+    public int countBattleships(char[][] board) {
+            int m=board.length;
+            int n=board[0].length;
+            int[] dx={0,0,-1,+1};
+            int[] dy={-1,+1,0,0};
+            int nx=0;
+            int ny=0;
+            int ans=0;
+            Queue<int[]> q=new LinkedList<>();
+            int[][] vis=new int[m][n];
+            for(int i=0;i<m;i++){
+                for(int j=0;j<n;j++){
+                    if (board[i][j]=='X' && vis[i][j]==0){
+                        vis[i][j]=1;
+                        ans=ans+1;
+                        q.add(new int[]{i,j});
+                        bfs(i,j,dx,dy,nx,ny,m,n,q,vis,board);
+                    }
+                }
+            }
+            return ans;
+
+    }
+    void bfs(int i,int j,int[] dx,int[] dy,int nx,int ny,int m,int n,Queue<int[]> q, int[][] vis,char[][] board){
+        while(!q.isEmpty()){
+            int[] p=q.poll();
+            int x=p[0];
+            int y=p[1];
+            for(int k=0;k<=3;k++){
+                nx=x+dx[k];
+                ny=y+dy[k];
+                if (nx>=0 && nx<m && ny>=0 && ny<n && board[nx][ny]=='X' && vis[nx][ny]==0){
+                    if ((nx==x && ny<=n) || (nx<=m && ny==y)){
+                        vis[nx][ny]=1;
+                        q.add(new int[] {nx,ny});
+                    }
+                }
+
+            }
+        }
+    }
+}

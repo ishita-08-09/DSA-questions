@@ -1,0 +1,69 @@
+class Solution {
+    public int longestCycle(int[] edges) {
+        int[] indegree=new int[edges.length];
+        int step=0;
+        int ans=0;
+        int maxx=-1;
+        Queue<Integer> q=new LinkedList<>();
+        int[] vis=new int[edges.length];
+        ArrayList<ArrayList<Integer>> adj=new ArrayList<>();
+        for(int i=0;i<edges.length;i++){
+            ArrayList<Integer> row=new ArrayList<>();
+            adj.add(row);
+        }
+        for(int i=0;i<edges.length;i++){
+            if(edges[i]!=-1)
+            {
+                adj.get(i).add(edges[i]);
+                indegree[edges[i]]=indegree[edges[i]]+1;
+
+            }
+        }
+        for(int i=0;i<edges.length;i++){
+            if (indegree[i]==0){
+                q.add(i);
+                vis[i]=1;
+
+            }
+        }
+        while(!q.isEmpty()){
+            int p=q.poll();
+            for(int j:adj.get(p)){
+                indegree[j]=indegree[j]-1;
+                if (indegree[j]==0){
+                    q.add(j);
+                    vis[j]=1;
+                }
+            }
+        }
+        for(int i=0;i<edges.length;i++){
+            if(vis[i]==0){
+                q.add(i);
+                ans=bfs(i,q,step,adj,vis);
+                if (ans>maxx) {
+                    maxx=ans;
+                }
+
+            }
+        }
+
+        return maxx;
+
+    }
+    int bfs(int i,Queue<Integer> q,int step,ArrayList<ArrayList<Integer>> adj,int[] vis){
+        while(!q.isEmpty()){
+            int p=q.poll();
+            step=step+1;
+            for(int j:adj.get(p)){
+                if(vis[j]==0){
+                    vis[j]=1;
+                    q.add(j);
+
+
+                }
+            }
+        }
+        return step-1;
+
+    }
+}

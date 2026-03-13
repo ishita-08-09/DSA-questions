@@ -1,0 +1,65 @@
+class Solution {
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        int n=edges.length;
+        int[] parent=new int[n+1];
+        int[] size=new int[n+1];
+        int[] first=null;
+        int[] second=null;
+        int[] indegree=new int[n+1];
+
+        for(int i=0;i<n+1;i++){
+            parent[i]=i;
+            size[i]=1;
+
+        }
+        for(int[] edge:edges){
+            int u=edge[0];
+            int v=edge[1];
+            if(indegree[v]==0){
+                indegree[v]=u;
+            }
+            else{
+                first=new int[]{indegree[v],v};
+                second=new int[] {u,v};
+                break;
+            }
+        }
+        for(int[] edge:edges){
+            int u=edge[0];
+            int v=edge[1];
+             if(second != null &&
+                edge[0] == second[0] &&
+                edge[1] == second[1]) {
+                continue;
+    }
+            if(find_parent(u,parent)==find_parent(v,parent)){
+                if(first==null){
+                    return edge;
+                }
+                return first;
+
+            }
+            merge(u,v,size,parent);
+        }
+        return second;
+
+
+    }
+    void merge(int x,int y,int[] size,int[] parent){
+        int px=find_parent(x,parent);
+        int py=find_parent(y,parent);
+        if(size[px]>size[py]){
+            size[px]=size[px]+size[py];
+            parent[py]=px;
+        }
+        else{
+            size[py]=size[py]+size[px];
+            parent[px]=py;
+
+        }
+    }
+    int find_parent(int curr,int[] parent){
+        if(parent[curr]==curr) return curr;
+        return parent[curr]=find_parent(parent[curr],parent);
+    }
+}

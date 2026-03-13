@@ -1,0 +1,54 @@
+class Solution {
+    public int countPaths(int n, int[][] roads) {
+        int[] path=new int[n];
+        path[0]=1;
+        ArrayList<ArrayList<long[]>> adj=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            ArrayList<long[]> row=new ArrayList<>();
+            adj.add(row);
+        }
+        for(int[] road:roads){
+            int u=road[0];
+            int v=road[1];
+            int w=road[2];
+            adj.get(u).add(new long[]{v,w});
+            adj.get(v).add(new long[]{u,w});
+        }
+        boolean[] finalised=new boolean[n];
+        PriorityQueue<long[]> q=new PriorityQueue<>((a,b)->Long.compare(a[1],b[1]));
+        q.add(new long[]{0,0});
+        long[] dis=new long[n];
+        Arrays.fill(dis,Long.MAX_VALUE);
+        dis[0]=0;
+        while(!q.isEmpty()){
+            long[] p=q.poll();
+            int f=(int)p[0];
+            long g=p[1];
+            if(!finalised[f]){
+                finalised[f]=true;
+                for(long[] j:adj.get(f)){
+                    int v=(int) j[0];
+                    long w=j[1];
+                    if(!finalised[v]){
+                        relax(f,g,v,w,dis,path,q);
+                    }
+                }
+
+            }
+
+        }
+        System.out.println(Arrays.toString(path));
+        return path[n-1]%((int)1e9+7);
+
+    }
+    void relax(int f,long g,int v,long w,long[] dis,int[] path, PriorityQueue<long[]> q){
+         if(g+w<dis[v]){
+            dis[v]=g+w;
+            q.add(new long[]{v,dis[v]});
+            path[v]=path[f];
+         }
+         else if(g+w==dis[v]){
+                path[v]=(path[v]+path[f])%((int)1e9+7);
+         }
+    }
+}

@@ -1,0 +1,54 @@
+class Solution {
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        boolean[] finalised=new boolean[n];
+        double[] dis=new double[n];
+        Arrays.fill(dis,Double.MIN_VALUE);
+        dis[start_node]=(double)1;
+        ArrayList<ArrayList<double[]>> adj=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            // ArrayList<double[]> row=new ArrayList<>();
+            adj.add(new ArrayList<>());
+        }
+        for(int i=0;i<edges.length;i++){
+            int[] edge = edges[i];
+            int u = edge[0];
+
+            int v = edge[1];
+            adj.get(u).add(new double[] {v,succProb[i]});
+            adj.get(v).add(new double[] {u,succProb[i]});
+        }
+        for(int i = 0;i<n;i++){
+            for(double[] arr : adj.get(i)){
+                System.out.println(Arrays.toString(arr));
+            }
+        }
+
+        // double val = 0;
+        // return val;
+        PriorityQueue<double[]> q=new PriorityQueue<>((a,b)->Double.compare(b[1],a[1]));
+        q.add(new double[]{start_node,1});
+        while(!q.isEmpty()){
+             double[] p=q.poll();
+             int f=(int) p[0];
+             double g=p[1];
+             if (!finalised[f]){
+                finalised[f]=true;
+                for(double[] j:adj.get(f)){
+                    int v=(int) j[0];
+                    double w=j[1];
+                    if (!finalised[v]) relax(g,v,w,dis,q);
+                }
+             }
+
+        }
+        return dis[end_node];
+
+    }
+    void relax(double g,int v,double w,double[] dis,PriorityQueue<double[]> q){
+        // q.add(new double[]{});
+        if (g*w>dis[v]){
+            dis[v]=g*w;
+            q.add(new double[]{(double)v,dis[v]});
+        }
+    }
+}

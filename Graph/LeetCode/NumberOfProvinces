@@ -1,0 +1,87 @@
+// class Solution {
+//     public int findCircleNum(int[][] isConnected) {
+//         int n=isConnected.length;
+//         int ans=0;
+//         int[] vis=new int[n];
+//         Queue<Integer> q=new LinkedList<>();
+//         for(int i=0;i<n;i++){
+//             if(vis[i]==0){
+//                 vis[i]=1;
+//                 q.offer(i);
+//                 ans=ans+1;
+//                 bfs(i,q,n,isConnected,vis);
+//             }
+//         }
+//         return ans;
+
+//     }
+//     void bfs(int i,Queue<Integer> q,int n,int[][] isConnected,int[] vis){
+//         while(!q.isEmpty()){
+//                i=q.poll();
+//             for(int j=0;j<n;j++){
+//                 if (isConnected[i][j]==1 && vis[j]==0){
+//                     vis[j]=1;
+//                     q.add(j);
+//                 }
+//             }
+
+//         }
+//     }
+// }
+class Solution {
+    int px=0;
+    int py=0;
+    int p=0;
+    int pc=0;
+    int ans=0;
+
+
+
+    public int findCircleNum(int[][] isConnected) {
+         int[] parent=new int[isConnected.length];
+         int[] size=new int[isConnected.length];
+        for(int i=0;i<isConnected.length;i++){
+            parent[i]=i;
+            size[i]=1;
+    }
+        for(int i=0;i<isConnected.length;i++){
+            for(int j=0;j<isConnected.length;j++){
+                if(isConnected[i][j]==1){
+                    if(i!=j){
+                    merge(i,j,px,py,size,parent);
+
+                    }
+                }
+            }
+        }
+        for(int i=0;i<parent.length;i++){
+            if(parent[i]==i){
+                ans=ans+1;
+
+            }
+        }
+        return ans;
+
+    }
+    void merge(int i,int j,int px,int py,int[] size,int[] parent){
+        px=find_parent(i,parent,p);
+        py=find_parent(j,parent,p);
+        if(size[px]>size[py]){
+            parent[py]=px;
+            size[px]=size[px]+size[py];
+        }
+        else{
+            parent[px]=py;
+            size[py]=size[py]+size[px];
+        }
+
+
+    }
+    int find_parent(int curr,int[] parent,int p){
+       p=parent[curr];
+       if(p==curr) return curr;
+       return parent[curr]=find_parent(p,parent,p);
+
+    }
+
+}

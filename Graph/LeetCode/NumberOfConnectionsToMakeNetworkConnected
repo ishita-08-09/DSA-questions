@@ -1,0 +1,42 @@
+class Solution {
+    public int makeConnected(int n, int[][] connections) {
+        int[] parent=new int[n];
+        int[] size=new int[n];
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+            size[i]=1;
+        }
+        if(connections.length<n-1){return -1;}
+        for(int[] edge:connections){
+            int u=edge[0];
+            int v=edge[1];
+            if(parent[u]!=parent[v]){
+                merge(u,v,size,parent);
+            }
+        }
+        int count=0;
+        for(int k=0;k<parent.length;k++){
+            if(parent[k]==k){
+                count=count+1;
+            }
+        }
+        return count-1;
+    }
+    void merge(int x,int y,int[] size,int[] parent){
+        int px=find_parent(x,parent);
+        int py=find_parent(y,parent);
+        if(size[px]>size[py]){
+            size[px]=size[px]+size[py];
+            parent[py]=px;
+        }
+        else{
+            size[py]=size[py]+size[px];
+            parent[px]=py;
+        }
+    }
+    int find_parent(int curr,int[] parent){
+        if(parent[curr]==curr){ return curr;}
+        return parent[curr]=find_parent(parent[curr],parent);
+
+    }
+}

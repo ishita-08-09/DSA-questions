@@ -1,0 +1,49 @@
+class Solution {
+    public int minCostConnectPoints(int[][] points) {
+        int distance=0;
+        int sum=0;
+        int[] vis=new int[points.length];
+        PriorityQueue<int[]> q=new PriorityQueue<>((a,b)->a[2]-b[2]);
+        ArrayList<ArrayList<int[]>> adj=new ArrayList<>();
+        for(int i=0;i<points.length;i++){
+            ArrayList<int[]> row=new ArrayList<>();
+            adj.add(row);
+        }
+        for(int i=0;i<points.length;i++){
+            for(int j=0;j<points.length;j++){
+                if(i!=j){
+                    int x1=points[i][0];
+                    int y1=points[i][1];
+                    int x2=points[j][0];
+                    int y2=points[j][1];
+                    distance=Math.abs(x1-x2)+Math.abs(y1-y2);
+                    adj.get(i).add(new int[]{j,distance});
+
+                }
+            }
+        }
+        for(int[] j:adj.get(0)){
+            q.add(new int[]{0,j[0],j[1]});
+            vis[0]=1;
+        }
+        while(!q.isEmpty()){
+            int[] p=q.poll();
+            int u=p[0];
+            int v=p[1];
+            int w=p[2];
+            if(vis[v]==0){
+                vis[v]=1;
+                sum=sum+w;
+                for(int[] k:adj.get(v)){
+                    q.add(new int[]{v,k[0],k[1]});
+                }
+            }
+            else{
+                continue;
+            }
+
+
+        }
+        return sum;
+    }
+}

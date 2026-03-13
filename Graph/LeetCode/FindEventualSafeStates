@@ -1,0 +1,45 @@
+import java.util.*;
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n=graph.length;
+        boolean[] is_safe=new boolean[n];
+        Queue<Integer> q=new LinkedList<>();
+        List<Integer> ans=new ArrayList<>();
+        int[] outdegree=new int[n];
+        ArrayList<ArrayList<Integer>> adj=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            ArrayList<Integer> row=new ArrayList<>();
+            adj.add(row);
+        }
+        for(int i=0;i<n;i++){
+            outdegree[i]=graph[i].length;
+            for(int j:graph[i]){
+                adj.get(j).add(i);
+            }
+
+        }
+        for(int i=0;i<n;i++){
+            if(outdegree[i]==0){
+               is_safe[i]=true;
+               q.add(i);
+               ans.add(i);
+            }
+        }
+        while(!q.isEmpty()){
+            int p=q.poll();
+
+            for(int j:adj.get(p)){
+                outdegree[j]=outdegree[j]-1;
+                if (outdegree[j]==0){
+                    is_safe[j]=true;
+                    q.add(j);
+                    ans.add(j);
+                }
+
+            }
+        }
+        Collections.sort(ans);
+        return ans;
+
+    }
+}

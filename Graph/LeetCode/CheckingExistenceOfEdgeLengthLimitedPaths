@@ -1,0 +1,74 @@
+class Solution {
+    public boolean[] distanceLimitedPathsExist(int n, int[][] edgeList, int[][] queries) {
+        int[] parent=new int[n];
+        int[] size=new int[n];
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+            size[i]=1;
+        }
+        int[][] q=new int[queries.length][4];
+        boolean[] ans=new boolean[queries.length];
+        for(int i=0;i<queries.length;i++){
+            q[i][0]=queries[i][0];
+            q[i][1]=queries[i][1];
+            q[i][2]=queries[i][2];
+            q[i][3]=i;
+        }
+        Arrays.sort(q,(a,b)->a[2]-b[2]);
+        Arrays.sort(edgeList,(a,b)->a[2]-b[2]);
+        int count=0;
+        for(int i=0;i<q.length;i++){
+            int x=q[i][0];
+            int y=q[i][1];
+            int limit=q[i][2];
+            int index=q[i][3];
+            while(count<edgeList.length){
+                if(edgeList[count][2]<limit){
+                    int u=edgeList[count][0];
+                    int v=edgeList[count][1];
+                    if(find_parent(u,parent)!=find_parent(v,parent)){
+                        merge(u,v,size,parent);
+                    }
+                    count=count+1;
+                }
+                else{
+                    break;
+                }
+                // else{
+                //     ans[index]=false;
+                // }
+
+
+            }
+            if(find_parent(x,parent)==find_parent(y,parent)){
+                ans[index]=true;
+            }
+            else{
+                ans[index]=false;
+            }
+
+        }
+        return ans;
+    }
+    void merge(int x,int y,int[] size,int[] parent){
+         int px=find_parent(x,parent);
+         int py=find_parent(y,parent);
+         if(size[px]>size[py]){
+            size[px]=size[px]+size[py];
+            parent[py]=px;
+         }
+         else{
+              size[py]=size[py]+size[px];
+               parent[px]=py;
+         }
+
+    }
+    int find_parent(int curr,int[] parent){
+        if(parent[curr]==curr){
+            return curr;
+        }
+        return find_parent(parent[curr],parent);
+    }
+
+
+}

@@ -1,0 +1,55 @@
+class Solution {
+    public List<List<Integer>> getAncestors(int n, int[][] edges) {
+        List<List<Integer>> l=new ArrayList<>();
+        //  for(int i=0;i<n;i++){
+        //     List<Integer> row=new ArrayList<>();
+        //     l.add(row);
+        // }
+        List<Set<Integer>> list=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            Set<Integer> s=new TreeSet<>();
+            list.add(s);
+        }
+        Queue<Integer> q=new LinkedList<>();
+        ArrayList<ArrayList<Integer>> adj=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            ArrayList<Integer> row=new ArrayList<>();
+            adj.add(row);
+        }
+        int[] indegree=new int[n];
+        for(int[] j:edges){
+            int u=j[0];
+            int v=j[1];
+            adj.get(u).add(v);
+            indegree[v]=indegree[v]+1;
+
+        }
+        for(int i=0;i<n;i++){
+            if(indegree[i]==0){
+               Set<Integer> row=new TreeSet<>();
+            //    list.add(row);
+               q.add(i);
+
+            }
+        }
+        while(!q.isEmpty()){
+            int p=q.poll();
+            for(int j:adj.get(p)){
+                indegree[j]=indegree[j]-1;
+                list.get(j).add(p);
+                if(indegree[j]==0){q.add(j);}
+                for(int k:list.get(p)){
+                    list.get(j).add(k);
+                }
+
+            }
+        }
+        for(Set<Integer> s:list){
+            l.add(new ArrayList<>(s));
+        }
+        return l;
+
+
+
+    }
+}

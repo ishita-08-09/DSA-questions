@@ -1,0 +1,59 @@
+class Solution {
+    public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+        int w=0;
+        int[] ans=new int[n];
+        int[] dis=new int[n];
+
+        for(int i=0;i<n;i++){
+            bellmann(n,i,dis,edges,distanceThreshold,ans);
+        }
+        int min=0;
+        for(int i=0;i<n;i++){
+            if(ans[i]<ans[min]){
+                min=i;
+            }
+            else if(ans[i]==ans[min]){
+                min=Math.max(i,min);
+            }
+        }
+        return min;
+
+    }
+
+    void bellmann(int n,int i,int[] dis,int[][] edges,int distanceThreshold,int[] ans ){
+        Arrays.fill(dis,Integer.MAX_VALUE);
+        dis[i]=0;
+        for(int k=0;k<n-1;k++){
+            for(int[] edge:edges){
+                int u=edge[0];
+                int v=edge[1];
+                int w=edge[2];
+
+
+                if (dis[u] != Integer.MAX_VALUE && dis[u] + w < dis[v]) {
+                    dis[v] = dis[u] + w;
+                }
+
+                if (dis[v] != Integer.MAX_VALUE && dis[v] + w < dis[u]) {
+                    dis[u] = dis[v] + w;
+                }
+
+
+            }
+        }
+        for(int j=0;j<n;j++){
+            if(i!=j)
+            {
+                if(dis[j]<=distanceThreshold){
+                      ans[i]=ans[i]+1;}
+            }
+        }
+
+    }
+    void relax(int w,int u,int v,int[][] edges,int[] dis){
+        if(dis[u]+w<dis[v]){
+            dis[v]=dis[u]+w;
+        }
+    }
+
+}
